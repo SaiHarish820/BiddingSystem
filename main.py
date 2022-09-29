@@ -1,66 +1,51 @@
 from flask import *
-import sqlite3
-
-
+import pymongo
+from urllib.parse import quote_plus
+import pprint
+from User.modules import User
 app=Flask(__name__)
 
+username = quote_plus('vinay_ch')
+password = quote_plus('test@123')
 
+url = 'mongodb+srv://' + username + ':' + password + '@vinnu.vyjljja.mongodb.net/?retryWrites=true&w=majority'
+client = pymongo.MongoClient(url, serverSelectionTimeoutMS=5000)
+db = client['BroBid']
+col = db.users
 
 @app.route('/')
+def index():
+    return render_template("index.html")
+
+@app.route('/logreg')
+def register():
+    return render_template("logreg.html")
+
+@app.route("/logreg", methods=['POST'])
+def my_regiser_user():
+    
+    col.insert_one(User().register())
+    return "Successfully regestered User"
+
+@app.route('/login')
 def login():
     return render_template("login.html")
 
-@app.route('/register')
-def register():
-    return render_template("register.html")
-
-@app.route('/home')
-def home():
-    return render_template("home.html")
-
-@app.route("/registeruser", methods=['POST','GET'])
-def my_regiser_user():
-    entered_username = request.form.get("username")
-    entered_companyname = request.form.get("companyname")
-    entered_email = request.form.get("email")
-    entered_password = request.form.get("password")
-    entered_password = entered_password.lower()
-
-
-
-    print(entered_username, entered_companyname, entered_email, entered_password)
-
-    con = sqlite3.connect("my_database1.sqlite3")
-
-    cur = con.cursor()
-
-    my_table_query = "create table if not exists userstable(name varchar(20),company name varchar(20),email varchar(30),password varchar(10))"
-    cur.execute(my_table_query)
-
-    cur.execute(f"select email from userstable where email='{entered_email}'")
-    result = cur.fetchone()
-    if result != None:
-        return "Email Already Exists....Try again"
+@app.route('/login', methods=['POST'])
+def log():
+    user_log = {
+            "username": request.form.get('lun'),
+            "password": request.form.get('lpd')
+        }
+    #name= user_log["username"]
+    v=(col.find_one({"username": "vinay"}))
+    print(v['Password'])
+    print(user_log['password'])
+    print(user_log)
+    if(v['Password']==user_log['password']):
+        return "credentials are correct"
     else:
-        my_insert_query = f"insert into userstable values('{entered_username}','{entered_companyname}','{entered_email}','{entered_password}')"
-        cur.execute(my_insert_query)
-        con.commit()
-        return "User Registered Successfully"
-
-@app.route("/loginuser", methods=['POST','GET'])
-def my_login():
-    entered_username = request.form.get("username")
-    entered_password = request.form.get("password")
-    con = sqlite3.connect("my_database1.sqlite3")
-    cur = con.cursor()
-    cur.execute(f"select * from userstable where name='{entered_username}' and password='{entered_password}'")
-
-    result = cur.fetchone()
-    if result is None:
-        return "Invalid User Credentials....try again"
-    else:
-        return render_template('home.html')
-
+        return "credentials are wrong"    
 
 
 if __name__=="__main__":

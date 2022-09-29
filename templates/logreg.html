@@ -1,0 +1,42 @@
+{% extends "template.html" %}
+{% block content %}
+<br>    
+
+   <div class="container" style="padding-top: 100px;">
+       <div class="row">
+           <div class="col-md-8">
+            <img style="position: absolute; z-index: -2; width: 50%; padding-left: 100px; padding-top: 10px;" src="static/assets/img/pickachu.gif">
+               <h1 class="text-dark " style="font-size:50px">We Make Your<br> Bidding Process<br> Easier
+                   Than Ever</h1>   
+           </div>
+
+           <div class="col-md-4">
+               <div class="card mt-100">
+                   <div class="card-body">
+                    <class="<button type=""></button>"
+                       <form class="form" action="/logreg" method="post">
+                           <label>Name</label><br>
+                           <input type="text" name="run" class="form-control"><br>
+                           <label>Company Name</label><br>
+                           <input type="text" name="rcn" class="form-control"><br>
+                           <label>Email</label><br>
+                           <input type="email" name="rem" class="form-control"><br>
+                           <label>Password</label><br>
+                           <input type="password" name="rpd" class="form-control"><br><br>
+                           <input type="submit" class="btn btn-primary btn-block btn-lg" value="Register">
+
+                       </form>
+                       <p class="mt-2">Already a member? <a href="/login">Login</a></p>
+
+                   </div>
+
+               </div>
+
+           </div>
+
+       </div>
+
+
+   </div>
+
+{% endblock %}
